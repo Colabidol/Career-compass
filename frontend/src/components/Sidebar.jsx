@@ -11,12 +11,14 @@ export default function SidebarPanel({ selectedGoal }) {
     <section className="details">
 
       <div className="top-items" >
-        <h2>{selectedGoal.title}</h2>
+        <h2>Task</h2>
             <div className="top-buttons" >
                     <button>Edit</button>
                     <button className="delete">Delete</button>
             </div>
       </div>
+
+      <h3>{selectedGoal.title}</h3>
 
       <label>Description</label>
 

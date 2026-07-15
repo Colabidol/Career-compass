@@ -6,7 +6,9 @@ export default function Goalform({ onSubmitGoal, onCancel, isSubmitting }) {
     description: "",
     priority: "medium",
     category: "Career",
-    dueDate: "",
+    dueMonth: "",
+    dueDay: "",
+    dueYear: "",
   });
 
   const handleInputChange = (event) => {
@@ -17,9 +19,65 @@ export default function Goalform({ onSubmitGoal, onCancel, isSubmitting }) {
     }));
   };
 
+  const handleDatePartChange = (event) => {
+    const { name, value } = event.target;
+    const digitsOnly = value.replace(/\D/g, "");
+    const maxLength = name === "dueYear" ? 4 : 2;
+    const nextValues = {
+      ...formValues,
+      [name]: digitsOnly.slice(0, maxLength),
+    };
+
+    const getMaxDaysForMonth = (monthText, yearText) => {
+      const monthNumber = Number.parseInt(monthText, 10);
+      if (!monthNumber || monthNumber < 1 || monthNumber > 12) {
+        return 31;
+      }
+
+      const maxDaysByMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      if (monthNumber !== 2) {
+        return maxDaysByMonth[monthNumber - 1];
+      }
+
+      if (yearText.length !== 4) {
+        return 29;
+      }
+
+      const yearNumber = Number.parseInt(yearText, 10);
+      const isLeapYear =
+        (yearNumber % 4 === 0 && yearNumber % 100 !== 0) || yearNumber % 400 === 0;
+      return isLeapYear ? 29 : 28;
+    };
+
+    if (nextValues.dueMonth) {
+      const monthNumber = Number.parseInt(nextValues.dueMonth, 10);
+      if (monthNumber > 12) {
+        nextValues.dueMonth = "12";
+      }
+    }
+
+    if (nextValues.dueDay) {
+      const maxDays = getMaxDaysForMonth(nextValues.dueMonth, nextValues.dueYear);
+      const dayNumber = Number.parseInt(nextValues.dueDay, 10);
+      if (dayNumber > maxDays) {
+        nextValues.dueDay = String(maxDays).padStart(2, "0");
+      }
+    }
+
+    setFormValues(nextValues);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    onSubmitGoal(formValues);
+    const dueDate =
+      formValues.dueMonth && formValues.dueDay && formValues.dueYear
+        ? `${formValues.dueMonth}/${formValues.dueDay}/${formValues.dueYear}`
+        : "";
+
+    onSubmitGoal({
+      ...formValues,
+      dueDate,
+    });
   };
 
   return (
@@ -79,16 +137,45 @@ export default function Goalform({ onSubmitGoal, onCancel, isSubmitting }) {
             <option value="Study">Study</option>
           </select>
 
-          <label htmlFor="dueDate">Due Date</label>
-          <input
-            id="dueDate"
-            name="dueDate"
-            onChange={handleInputChange}
-            pattern="(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/\\d{4}"
-            placeholder="MM/DD/YYYY"
-            type="text"
-            value={formValues.dueDate}
-          />
+          <label htmlFor="dueMonth">Due Date</label>
+          <div className="goalform-date-fields">
+            <input
+              id="dueMonth"
+              className="goalform-date-input"
+              inputMode="numeric"
+              maxLength={2}
+              name="dueMonth"
+              onChange={handleDatePartChange}
+              pattern="[0-9]{2}"
+              placeholder="MM"
+              type="text"
+              value={formValues.dueMonth}
+            />
+            <span className="goalform-date-separator">/</span>
+            <input
+              className="goalform-date-input"
+              inputMode="numeric"
+              maxLength={2}
+              name="dueDay"
+              onChange={handleDatePartChange}
+              pattern="[0-9]{2}"
+              placeholder="DD"
+              type="text"
+              value={formValues.dueDay}
+            />
+            <span className="goalform-date-separator">/</span>
+            <input
+              className="goalform-date-input goalform-date-input-year"
+              inputMode="numeric"
+              maxLength={4}
+              name="dueYear"
+              onChange={handleDatePartChange}
+              pattern="[0-9]{4}"
+              placeholder="YYYY"
+              type="text"
+              value={formValues.dueYear}
+            />
+          </div>
 
           <div className="goalform-actions">
             <button className="goalform-cancel" onClick={onCancel} type="button">

@@ -225,6 +225,25 @@
   border: 1px solid transparent;
 }
 
+.goalform-date-fields {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.goalform-date-input {
+  text-align: center;
+}
+
+.goalform-date-input-year {
+  width: 100%;
+}
+
+.goalform-date-separator {
+  color: #5f6680;
+  font-weight: 600;
+}
+
 .goalform-actions {
   margin-top: auto;
   display: flex;
