@@ -7,9 +7,16 @@
   min-height: calc(100vh - 48px);
 }
 
-.mainbar,
-.sidebar {
+.mainbar {
   flex: 0 0 280px;
+  background: #f4f6ff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(28, 41, 74, 0.08);
+}
+
+.sidebar {
+  flex: 0 0 500px;
   background: #f4f6ff;
   border-radius: 24px;
   padding: 24px;
@@ -62,6 +69,13 @@
   color: #6b7280;
 }
 
+.top-items {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
 .top-buttons {
   display: flex;
   gap: 10px;
@@ -77,9 +91,18 @@
   color: #fff;
 }
 
-.top-buttons .delete,
-.details .complete {
+.add-btn {
+  background: #6c63ff;
+  min-height: 60px;
+}
+
+.top-buttons .delete {
   background: #ff6b6b;
+}
+
+.complete {
+  min-height: 60px;
+  background: #6c63ff;
 }
 
 .mainbar-panel input,

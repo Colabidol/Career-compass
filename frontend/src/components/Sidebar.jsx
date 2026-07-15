@@ -1,12 +1,14 @@
 export default function SidebarPanel() {
   return (
     <section className="details">
-      <div className="top-buttons">
-        <button>Edit</button>
-        <button className="delete">Delete</button>
-      </div>
 
-      <h2>Apply to Accenture</h2>
+      <div className="top-items" >
+        <h2>Apply to Accenture</h2>
+            <div className="top-buttons" >
+                    <button>Edit</button>
+                    <button className="delete">Delete</button>
+            </div>
+      </div>
 
       <label>Description</label>
 

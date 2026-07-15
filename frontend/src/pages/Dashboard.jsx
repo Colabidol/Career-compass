@@ -1,5 +1,5 @@
 import MainbarPanel from "../components/Mainbar";
-import TaskCard from "../components/Foreground";
+import TaskCard from "../components/Card";
 import SidebarPanel from "../components/Sidebar";
 
 export default function Dashboard() {
