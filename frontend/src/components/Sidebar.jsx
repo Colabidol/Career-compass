@@ -4,6 +4,8 @@ export default function SidebarPanel({
   isDeletingGoal,
   onEditGoal,
   isEditingGoal,
+  onCompleteGoal,
+  isCompletingGoal,
 }) {
   if (!selectedGoal) {
     return (
@@ -58,8 +60,17 @@ export default function SidebarPanel({
 
       <input value={selectedGoal.dueDate} readOnly />
 
-      <button className="complete">
-        Complete Goal
+      <button
+        className="complete"
+        disabled={isCompletingGoal || selectedGoal.status === "complete"}
+        onClick={onCompleteGoal}
+        type="button"
+      >
+        {selectedGoal.status === "complete"
+          ? "Completed"
+          : isCompletingGoal
+            ? "Completing..."
+            : "Complete Goal"}
       </button>
     </section>
   );

@@ -14,6 +14,7 @@ export default function Dashboard() {
   const [isGoalformOpen, setIsGoalformOpen] = useState(false);
   const [isSubmittingGoal, setIsSubmittingGoal] = useState(false);
   const [isDeletingGoal, setIsDeletingGoal] = useState(false);
+  const [isCompletingGoal, setIsCompletingGoal] = useState(false);
   const [editingGoalId, setEditingGoalId] = useState(null);
 
   const parseDueDateToIso = (dueDateText) => {
@@ -162,6 +163,40 @@ export default function Dashboard() {
     setIsGoalformOpen(true);
   };
 
+  const handleCompleteGoal = async () => {
+    if (!selectedGoal || selectedGoal.status === "complete") {
+      return;
+    }
+
+    try {
+      setIsCompletingGoal(true);
+      const updatedGoal = await updateTask(selectedGoal.id, {
+        completed: true,
+      });
+
+      const normalizedGoal = {
+        id: updatedGoal.id,
+        title: updatedGoal.title,
+        status: updatedGoal.completed ? "complete" : "active",
+        description: updatedGoal.description || "",
+        category: updatedGoal.category || "Career",
+        priority: formatPriorityLabel(updatedGoal.priority),
+        dueDate: updatedGoal.due_date
+          ? new Date(updatedGoal.due_date).toLocaleDateString()
+          : "No due date",
+      };
+
+      setGoals((prev) =>
+        prev.map((goal) => (goal.id === updatedGoal.id ? normalizedGoal : goal))
+      );
+      setSelectedGoalId(updatedGoal.id);
+    } catch (error) {
+      console.error("Failed to complete goal", error);
+    } finally {
+      setIsCompletingGoal(false);
+    }
+  };
+
   const selectedGoal = goals.find((goal) => goal.id === selectedGoalId) || null;
   const editingGoal = goals.find((goal) => goal.id === editingGoalId) || null;
 
@@ -215,8 +250,10 @@ export default function Dashboard() {
 
           <aside className="sidebar">
             <SidebarPanel
+              isCompletingGoal={isCompletingGoal}
               isEditingGoal={isGoalformOpen}
               isDeletingGoal={isDeletingGoal}
+              onCompleteGoal={handleCompleteGoal}
               onEditGoal={handleEditGoal}
               onDeleteGoal={handleDeleteGoal}
               selectedGoal={selectedGoal}
