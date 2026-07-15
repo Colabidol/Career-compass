@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.vite/
+backend/__pycache__/
+backend/*.db
+backend/.venv/
+backend/.env
+frontend/src/assets/hero.png
+frontend/src/assets/vite.svg
+frontend/src/assets/react.svg
+frontend/public/favicon.svg
+frontend/public/icons.svg

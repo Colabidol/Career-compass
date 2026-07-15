@@ -1,0 +1,20 @@
+from pydantic import BaseModel, Field
+from typing import Optional
+
+
+class TaskCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=120)
+    description: Optional[str] = None
+    completed: bool = False
+    category: str = "Career"
+
+
+class TaskUpdate(BaseModel):
+    title: Optional[str] = Field(default=None, min_length=1, max_length=120)
+    description: Optional[str] = None
+    completed: Optional[bool] = None
+    category: Optional[str] = None
+
+
+class TaskRead(TaskCreate):
+    id: int
