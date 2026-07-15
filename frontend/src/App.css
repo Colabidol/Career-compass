@@ -40,6 +40,26 @@
   box-shadow: 0 10px 30px rgba(28, 41, 74, 0.08);
 }
 
+.empty-state {
+  margin: auto 0;
+  text-align: center;
+  padding: 36px 20px;
+  border: 1px dashed #d8dbff;
+  border-radius: 16px;
+  background: #fafbff;
+}
+
+.empty-state h2 {
+  font-size: 24px;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.empty-state p {
+  font-size: 15px;
+  color: #5f6680;
+}
+
 .mainbar-panel,
 .details {
   display: flex;

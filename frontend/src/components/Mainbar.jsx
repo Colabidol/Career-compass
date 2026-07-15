@@ -5,6 +5,7 @@ export default function Mainbar({
   onCompleteToggle,
   selectedFilter,
   onFilterChange,
+  onAddGoal,
 }) {
   return (
     <div className="mainbar-panel">
@@ -15,7 +16,11 @@ export default function Mainbar({
         placeholder="Search..."
       />
 
-      <button className="add-btn">
+      <button
+        className="add-btn"
+        onClick={onAddGoal}
+        type="button"
+      >
         + Add Goal
       </button>
 
