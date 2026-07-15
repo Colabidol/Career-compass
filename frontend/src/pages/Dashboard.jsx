@@ -1,25 +1,26 @@
-import Sidebar from "../components/Mainbar";
+import MainbarPanel from "../components/Mainbar";
 import TaskCard from "../components/Foreground";
-import TaskDetails from "../components/Sidebar";
+import SidebarPanel from "../components/Sidebar";
 
 export default function Dashboard() {
   return (
     <div className="container">
+      <aside className="mainbar">
+        <MainbarPanel />
+      </aside>
 
-      <Sidebar />
-
-      <main className="task-list">
-
-        <h1>GOALS</h1>
-
-        <TaskCard />
-        <TaskCard />
-        <TaskCard />
-
+      <main className="foreground">
+        <section className="task-list">
+          <h1>GOALS</h1>
+          <TaskCard />
+          <TaskCard />
+          <TaskCard />
+        </section>
       </main>
 
-      <TaskDetails />
-
+      <aside className="sidebar">
+        <SidebarPanel />
+      </aside>
     </div>
   );
 }

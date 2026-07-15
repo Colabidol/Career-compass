@@ -1,7 +1,6 @@
-export default function TaskDetails() {
+export default function SidebarPanel() {
   return (
     <section className="details">
-
       <div className="top-buttons">
         <button>Edit</button>
         <button className="delete">Delete</button>
@@ -31,7 +30,6 @@ export default function TaskDetails() {
       <button className="complete">
         Complete Goal
       </button>
-
     </section>
   );
 }

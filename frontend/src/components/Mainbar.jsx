@@ -1,7 +1,6 @@
-export default function Sidebar() {
+export default function Mainbar() {
   return (
-    <aside className="sidebar">
-
+    <div className="mainbar-panel">
       <h2>Career Compass</h2>
 
       <input
@@ -22,7 +21,6 @@ export default function Sidebar() {
       <button>All</button>
       <button>Active</button>
       <button>Inactive</button>
-
-    </aside>
+    </div>
   );
 }
