@@ -46,6 +46,20 @@ def create_goal(goal_data: schemas.GoalCreate, db: Session = Depends(get_db)):
     return db_goal
 
 
+@app.patch("/goals/{goal_id}", response_model=schemas.GoalRead)
+def update_goal(goal_id: int, goal_data: schemas.GoalUpdate, db: Session = Depends(get_db)):
+    goal = db.query(models.Goal).filter(models.Goal.id == goal_id).first()
+    if goal is None:
+      raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Goal not found")
+
+    for field, value in goal_data.model_dump(exclude_unset=True).items():
+        setattr(goal, field, value)
+
+    db.commit()
+    db.refresh(goal)
+    return goal
+
+
 @app.delete("/goals/{goal_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_goal(goal_id: int, db: Session = Depends(get_db)):
     goal = db.query(models.Goal).filter(models.Goal.id == goal_id).first()
