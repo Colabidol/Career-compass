@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import MainbarPanel from "../components/Mainbar";
 import TaskCard from "../components/Card";
 import SidebarPanel from "../components/Sidebar";
+import Goalform from "../components/Goalform";
 import { createTask, getGoals } from "../services/api";
 
 export default function Dashboard() {
@@ -10,6 +11,21 @@ export default function Dashboard() {
   const [goals, setGoals] = useState([]);
   const [selectedGoalId, setSelectedGoalId] = useState(null);
   const [isLoadingGoals, setIsLoadingGoals] = useState(true);
+  const [isGoalformOpen, setIsGoalformOpen] = useState(false);
+  const [isSubmittingGoal, setIsSubmittingGoal] = useState(false);
+
+  const parseDueDateToIso = (dueDateText) => {
+    if (!dueDateText) {
+      return null;
+    }
+
+    const [month, day, year] = dueDateText.split("/").map(Number);
+    if (!month || !day || !year) {
+      return null;
+    }
+
+    return new Date(year, month - 1, day).toISOString();
+  };
 
   useEffect(() => {
     const loadGoals = async () => {
@@ -56,34 +72,45 @@ export default function Dashboard() {
     setSelectedFilter(filterKey);
   };
 
-  const handleAddGoal = async () => {
+  const handleOpenGoalform = () => {
+    setIsGoalformOpen(true);
+  };
+
+  const handleCloseGoalform = () => {
+    setIsGoalformOpen(false);
+  };
+
+  const handleAddGoal = async (formValues) => {
     try {
-    const nextGoalNumber = goals.length + 1;
-    const createdGoal = await createTask({
-      title: `Career Goal ${nextGoalNumber}`,
-      description: "Goal details coming soon.",
-      completed: false,
-      category: "Career",
-      priority: "High",
-      due_date: null,
-    });
+      setIsSubmittingGoal(true);
+      const createdGoal = await createTask({
+        title: formValues.title,
+        description: formValues.description,
+        completed: false,
+        category: formValues.category,
+        priority: formValues.priority,
+        due_date: parseDueDateToIso(formValues.dueDate),
+      });
 
-    const newGoal = {
-      id: createdGoal.id,
-      title: createdGoal.title,
-      status: createdGoal.completed ? "complete" : "active",
-      description: createdGoal.description || "",
-      category: createdGoal.category || "Career",
-      priority: createdGoal.priority || "Medium",
-      dueDate: createdGoal.due_date
-        ? new Date(createdGoal.due_date).toLocaleDateString()
-        : "No due date",
-    };
+      const newGoal = {
+        id: createdGoal.id,
+        title: createdGoal.title,
+        status: createdGoal.completed ? "complete" : "active",
+        description: createdGoal.description || "",
+        category: createdGoal.category || "Career",
+        priority: createdGoal.priority || "medium",
+        dueDate: createdGoal.due_date
+          ? new Date(createdGoal.due_date).toLocaleDateString()
+          : "No due date",
+      };
 
-    setGoals((prev) => [...prev, newGoal]);
-    setSelectedGoalId(newGoal.id);
+      setGoals((prev) => [...prev, newGoal]);
+      setSelectedGoalId(newGoal.id);
+      setIsGoalformOpen(false);
     } catch (error) {
       console.error("Failed to create goal", error);
+    } finally {
+      setIsSubmittingGoal(false);
     }
   };
 
@@ -97,38 +124,48 @@ export default function Dashboard() {
           onCompleteToggle={handleCompleteToggle}
           selectedFilter={selectedFilter}
           onFilterChange={handleFilterChange}
-          onAddGoal={handleAddGoal}
+          onAddGoal={handleOpenGoalform}
         />
       </aside>
 
-      <main className="foreground">
-        <section className="task-list">
-          <h1>GOALS</h1>
-          {isLoadingGoals ? (
-            <div className="empty-state">
-              <h2>Loading Goals...</h2>
-            </div>
-          ) : visibleGoals.length === 0 ? (
-            <div className="empty-state">
-              <h2>No Goals Yet.</h2>
-              <p>Click "+ Add Goal" to create your first career goal.</p>
-            </div>
-          ) : (
-            visibleGoals.map((goal) => (
-              <TaskCard
-                key={goal.id}
-                goal={goal}
-                isSelected={selectedGoalId === goal.id}
-                onSelect={() => setSelectedGoalId(goal.id)}
-              />
-            ))
-          )}
-        </section>
-      </main>
+      {isGoalformOpen ? (
+        <Goalform
+          isSubmitting={isSubmittingGoal}
+          onCancel={handleCloseGoalform}
+          onSubmitGoal={handleAddGoal}
+        />
+      ) : (
+        <>
+          <main className="foreground">
+            <section className="task-list">
+              <h1>GOALS</h1>
+              {isLoadingGoals ? (
+                <div className="empty-state">
+                  <h2>Loading Goals...</h2>
+                </div>
+              ) : visibleGoals.length === 0 ? (
+                <div className="empty-state">
+                  <h2>No Goals Yet.</h2>
+                  <p>Click "+ Add Goal" to create your first career goal.</p>
+                </div>
+              ) : (
+                visibleGoals.map((goal) => (
+                  <TaskCard
+                    key={goal.id}
+                    goal={goal}
+                    isSelected={selectedGoalId === goal.id}
+                    onSelect={() => setSelectedGoalId(goal.id)}
+                  />
+                ))
+              )}
+            </section>
+          </main>
 
-      <aside className="sidebar">
-        <SidebarPanel selectedGoal={selectedGoal} />
-      </aside>
+          <aside className="sidebar">
+            <SidebarPanel selectedGoal={selectedGoal} />
+          </aside>
+        </>
+      )}
     </div>
   );
 }

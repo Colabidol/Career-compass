@@ -185,6 +185,75 @@
   color: #1f2937;
 }
 
+.goalform-layout {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: 24px;
+}
+
+.goalform-layout .sidebar {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.goalform-panel {
+  height: 100%;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 12px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(28, 41, 74, 0.08);
+}
+
+.goalform-panel-side {
+  background: #fafbff;
+}
+
+.goalform-panel input,
+.goalform-panel textarea,
+.goalform-panel select {
+  width: 100%;
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: #eef0ff;
+  color: #1f2937;
+  border: 1px solid transparent;
+}
+
+.goalform-actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.goalform-actions button {
+  border-radius: 999px;
+  padding: 10px 16px;
+  border: 1px solid transparent;
+}
+
+.goalform-cancel {
+  background: transparent;
+  border-color: #6c63ff;
+  color: #6c63ff;
+}
+
+.goalform-save {
+  background: #6c63ff;
+  color: #ffffff;
+}
+
+.goalform-save:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .details textarea {
   min-height: 100px;
 }
