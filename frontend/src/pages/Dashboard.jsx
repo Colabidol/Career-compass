@@ -3,7 +3,7 @@ import MainbarPanel from "../components/Mainbar";
 import TaskCard from "../components/Card";
 import SidebarPanel from "../components/Sidebar";
 import Goalform from "../components/Goalform";
-import { createTask, getGoals } from "../services/api";
+import { createTask, deleteTask, getGoals } from "../services/api";
 
 export default function Dashboard() {
   const [isCompleteSelected, setIsCompleteSelected] = useState(false);
@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [isLoadingGoals, setIsLoadingGoals] = useState(true);
   const [isGoalformOpen, setIsGoalformOpen] = useState(false);
   const [isSubmittingGoal, setIsSubmittingGoal] = useState(false);
+  const [isDeletingGoal, setIsDeletingGoal] = useState(false);
 
   const parseDueDateToIso = (dueDateText) => {
     if (!dueDateText) {
@@ -114,6 +115,24 @@ export default function Dashboard() {
     }
   };
 
+  const handleDeleteGoal = async () => {
+    if (!selectedGoal) {
+      return;
+    }
+
+    try {
+      setIsDeletingGoal(true);
+      await deleteTask(selectedGoal.id);
+
+      setGoals((prev) => prev.filter((goal) => goal.id !== selectedGoal.id));
+      setSelectedGoalId(null);
+    } catch (error) {
+      console.error("Failed to delete goal", error);
+    } finally {
+      setIsDeletingGoal(false);
+    }
+  };
+
   const selectedGoal = goals.find((goal) => goal.id === selectedGoalId) || null;
 
   return (
@@ -162,7 +181,11 @@ export default function Dashboard() {
           </main>
 
           <aside className="sidebar">
-            <SidebarPanel selectedGoal={selectedGoal} />
+            <SidebarPanel
+              isDeletingGoal={isDeletingGoal}
+              onDeleteGoal={handleDeleteGoal}
+              selectedGoal={selectedGoal}
+            />
           </aside>
         </>
       )}
