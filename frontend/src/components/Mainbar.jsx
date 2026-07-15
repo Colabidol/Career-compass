@@ -1,3 +1,5 @@
+import compassLogo from "../assets/compass-svgrepo-com.svg";
+
 const FILTER_OPTIONS = ["all", "active", "inactive"];
 
 export default function Mainbar({
@@ -9,7 +11,10 @@ export default function Mainbar({
 }) {
   return (
     <div className="mainbar-panel">
-      <h2>Career Compass</h2>
+      <div className="mainbar-brand">
+        <img alt="Career Compass logo" className="mainbar-logo" src={compassLogo} />
+        <h2>Career Compass</h2>
+      </div>
 
       <input
         type="text"

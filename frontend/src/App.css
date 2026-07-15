@@ -68,6 +68,19 @@
   height: 100%;
 }
 
+.mainbar-brand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.mainbar-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
 .card {
   display: flex;
   align-items: center;

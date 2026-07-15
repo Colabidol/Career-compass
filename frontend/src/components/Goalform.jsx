@@ -120,9 +120,9 @@ export default function Goalform({ onSubmitGoal, onCancel, isSubmitting }) {
             onChange={handleInputChange}
             value={formValues.priority}
           >
-            <option value="high">high</option>
-            <option value="medium">medium</option>
-            <option value="low">low</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
           </select>
 
           <label htmlFor="category">Category</label>
