@@ -73,10 +73,22 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  width: 100%;
   padding: 16px 18px;
   border: 1px solid #e7e8ff;
   border-radius: 16px;
   background: #f8f9ff;
+  text-align: left;
+}
+
+.card:hover {
+  border-color: #cfd4ff;
+  background: #f2f4ff;
+}
+
+.card-selected {
+  border-color: #6c63ff;
+  background: rgba(108, 99, 255, 0.12);
 }
 
 .card h2 {
@@ -186,4 +198,14 @@
 .mainbar-panel h3 {
   font-size: 15px;
   margin-top: 6px;
+}
+
+.sidebar-empty {
+  justify-content: center;
+  align-items: center;
+}
+
+.sidebar-empty h2 {
+  text-align: center;
+  color: #5f6680;
 }

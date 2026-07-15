@@ -1,19 +1,23 @@
-export default function TaskCard() {
+export default function TaskCard({ goal, isSelected, onSelect }) {
   return (
-    <div className="card">
+    <button
+      className={`card ${isSelected ? "card-selected" : ""}`.trim()}
+      onClick={onSelect}
+      type="button"
+    >
 
       <div>
 
-        <h2>Apply to Accenture</h2>
+        <h2>{goal.title}</h2>
 
-        <p>Priority: High</p>
+        <p>Priority: {goal.priority}</p>
 
-        <p>Due: Sept 26, 2026</p>
+        <p>Due: {goal.dueDate}</p>
 
       </div>
 
       <span>›</span>
 
-    </div>
+    </button>
   );
 }
