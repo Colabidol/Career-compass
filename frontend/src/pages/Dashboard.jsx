@@ -64,7 +64,11 @@ export default function Dashboard() {
   }, []);
 
   const visibleGoals = goals.filter((goal) => {
-    if (isCompleteSelected && goal.status !== "complete") {
+    if (isCompleteSelected) {
+      return goal.status === "complete";
+    }
+
+    if (goal.status === "complete") {
       return false;
     }
 
