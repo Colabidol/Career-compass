@@ -3,7 +3,7 @@ import MainbarPanel from "../components/Mainbar";
 import TaskCard from "../components/Card";
 import SidebarPanel from "../components/Sidebar";
 import Goalform from "../components/Goalform";
-import { createTask, deleteTask, getGoals } from "../services/api";
+import { createTask, deleteTask, getGoals, updateTask } from "../services/api";
 
 export default function Dashboard() {
   const [isCompleteSelected, setIsCompleteSelected] = useState(false);
@@ -14,6 +14,7 @@ export default function Dashboard() {
   const [isGoalformOpen, setIsGoalformOpen] = useState(false);
   const [isSubmittingGoal, setIsSubmittingGoal] = useState(false);
   const [isDeletingGoal, setIsDeletingGoal] = useState(false);
+  const [editingGoalId, setEditingGoalId] = useState(null);
 
   const parseDueDateToIso = (dueDateText) => {
     if (!dueDateText) {
@@ -74,39 +75,50 @@ export default function Dashboard() {
   };
 
   const handleOpenGoalform = () => {
+    setEditingGoalId(null);
     setIsGoalformOpen(true);
   };
 
   const handleCloseGoalform = () => {
+    setEditingGoalId(null);
     setIsGoalformOpen(false);
   };
 
   const handleAddGoal = async (formValues) => {
     try {
       setIsSubmittingGoal(true);
-      const createdGoal = await createTask({
+      const goalPayload = {
         title: formValues.title,
         description: formValues.description,
-        completed: false,
+        completed: editingGoalId ? selectedGoal?.status === "complete" : false,
         category: formValues.category,
         priority: formValues.priority,
         due_date: parseDueDateToIso(formValues.dueDate),
-      });
+      };
 
-      const newGoal = {
-        id: createdGoal.id,
-        title: createdGoal.title,
-        status: createdGoal.completed ? "complete" : "active",
-        description: createdGoal.description || "",
-        category: createdGoal.category || "Career",
-        priority: createdGoal.priority || "medium",
-        dueDate: createdGoal.due_date
-          ? new Date(createdGoal.due_date).toLocaleDateString()
+      const savedGoal = editingGoalId
+        ? await updateTask(editingGoalId, goalPayload)
+        : await createTask(goalPayload);
+
+      const normalizedGoal = {
+        id: savedGoal.id,
+        title: savedGoal.title,
+        status: savedGoal.completed ? "complete" : "active",
+        description: savedGoal.description || "",
+        category: savedGoal.category || "Career",
+        priority: savedGoal.priority || "medium",
+        dueDate: savedGoal.due_date
+          ? new Date(savedGoal.due_date).toLocaleDateString()
           : "No due date",
       };
 
-      setGoals((prev) => [...prev, newGoal]);
-      setSelectedGoalId(newGoal.id);
+      setGoals((prev) =>
+        editingGoalId
+          ? prev.map((goal) => (goal.id === editingGoalId ? normalizedGoal : goal))
+          : [...prev, normalizedGoal]
+      );
+      setSelectedGoalId(normalizedGoal.id);
+      setEditingGoalId(null);
       setIsGoalformOpen(false);
     } catch (error) {
       console.error("Failed to create goal", error);
@@ -133,7 +145,17 @@ export default function Dashboard() {
     }
   };
 
+  const handleEditGoal = () => {
+    if (!selectedGoal) {
+      return;
+    }
+
+    setEditingGoalId(selectedGoal.id);
+    setIsGoalformOpen(true);
+  };
+
   const selectedGoal = goals.find((goal) => goal.id === selectedGoalId) || null;
+  const editingGoal = goals.find((goal) => goal.id === editingGoalId) || null;
 
   return (
     <div className="container">
@@ -149,9 +171,12 @@ export default function Dashboard() {
 
       {isGoalformOpen ? (
         <Goalform
+          initialValues={editingGoal}
           isSubmitting={isSubmittingGoal}
           onCancel={handleCloseGoalform}
           onSubmitGoal={handleAddGoal}
+          submitLabel={editingGoalId ? "Update Goal" : "Save Goal"}
+          title={editingGoalId ? "Edit Goal" : "Create Goal"}
         />
       ) : (
         <>
@@ -182,7 +207,9 @@ export default function Dashboard() {
 
           <aside className="sidebar">
             <SidebarPanel
+              isEditingGoal={isGoalformOpen}
               isDeletingGoal={isDeletingGoal}
+              onEditGoal={handleEditGoal}
               onDeleteGoal={handleDeleteGoal}
               selectedGoal={selectedGoal}
             />

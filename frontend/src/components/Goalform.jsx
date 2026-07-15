@@ -1,14 +1,24 @@
 import { useState } from "react";
 
-export default function Goalform({ onSubmitGoal, onCancel, isSubmitting }) {
+export default function Goalform({
+  onSubmitGoal,
+  onCancel,
+  isSubmitting,
+  initialValues,
+  submitLabel = "Save Goal",
+  title = "Create Goal",
+}) {
+  const [initialMonth = "", initialDay = "", initialYear = ""] =
+    initialValues?.dueDate?.split("/") || [];
+
   const [formValues, setFormValues] = useState({
-    title: "",
-    description: "",
-    priority: "medium",
-    category: "Career",
-    dueMonth: "",
-    dueDay: "",
-    dueYear: "",
+    title: initialValues?.title || "",
+    description: initialValues?.description || "",
+    priority: (initialValues?.priority || "medium").toLowerCase(),
+    category: initialValues?.category || "Career",
+    dueMonth: initialMonth,
+    dueDay: initialDay,
+    dueYear: initialYear,
   });
 
   const handleInputChange = (event) => {
@@ -84,7 +94,7 @@ export default function Goalform({ onSubmitGoal, onCancel, isSubmitting }) {
     <form className="goalform-layout" onSubmit={handleSubmit}>
       <main className="foreground">
         <section className="goalform-panel">
-          <h1>Create Goal</h1>
+          <h1>{title}</h1>
 
           <label htmlFor="title">Title</label>
           <input
@@ -182,7 +192,7 @@ export default function Goalform({ onSubmitGoal, onCancel, isSubmitting }) {
               Cancel
             </button>
             <button className="goalform-save" disabled={isSubmitting} type="submit">
-              {isSubmitting ? "Saving..." : "Save Goal"}
+              {isSubmitting ? "Saving..." : submitLabel}
             </button>
           </div>
         </section>

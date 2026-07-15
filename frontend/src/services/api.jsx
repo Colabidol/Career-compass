@@ -17,6 +17,18 @@ export async function createTask(task) {
     return await res.json();
 }
 
+export async function updateTask(id, task) {
+    const res = await fetch(`${API}/goals/${id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(task),
+    });
+
+    return await res.json();
+}
+
 export async function deleteTask(id) {
     await fetch(`${API}/goals/${id}`, {
         method: "DELETE",

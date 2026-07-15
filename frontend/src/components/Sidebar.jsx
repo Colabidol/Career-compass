@@ -1,4 +1,10 @@
-export default function SidebarPanel({ selectedGoal, onDeleteGoal, isDeletingGoal }) {
+export default function SidebarPanel({
+  selectedGoal,
+  onDeleteGoal,
+  isDeletingGoal,
+  onEditGoal,
+  isEditingGoal,
+}) {
   if (!selectedGoal) {
     return (
       <section className="details sidebar-empty">
@@ -13,7 +19,13 @@ export default function SidebarPanel({ selectedGoal, onDeleteGoal, isDeletingGoa
       <div className="top-items" >
         <h2>Task</h2>
             <div className="top-buttons" >
-                    <button>Edit</button>
+                    <button
+                      disabled={isEditingGoal}
+                      onClick={onEditGoal}
+                      type="button"
+                    >
+                      {isEditingGoal ? "Editing..." : "Edit"}
+                    </button>
                     <button
                       className="delete"
                       disabled={isDeletingGoal}
