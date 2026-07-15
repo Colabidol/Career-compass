@@ -29,6 +29,14 @@ export default function Dashboard() {
     return new Date(year, month - 1, day).toISOString();
   };
 
+  const formatPriorityLabel = (priorityValue) => {
+    if (!priorityValue) {
+      return "Medium";
+    }
+
+    return priorityValue.charAt(0).toUpperCase() + priorityValue.slice(1).toLowerCase();
+  };
+
   useEffect(() => {
     const loadGoals = async () => {
       try {
@@ -39,7 +47,7 @@ export default function Dashboard() {
           status: goal.completed ? "complete" : "active",
           description: goal.description || "",
           category: goal.category || "Career",
-          priority: goal.priority || "Medium",
+          priority: formatPriorityLabel(goal.priority),
           dueDate: goal.due_date ? new Date(goal.due_date).toLocaleDateString() : "No due date",
         }));
 
@@ -106,7 +114,7 @@ export default function Dashboard() {
         status: savedGoal.completed ? "complete" : "active",
         description: savedGoal.description || "",
         category: savedGoal.category || "Career",
-        priority: savedGoal.priority || "medium",
+        priority: formatPriorityLabel(savedGoal.priority),
         dueDate: savedGoal.due_date
           ? new Date(savedGoal.due_date).toLocaleDateString()
           : "No due date",
