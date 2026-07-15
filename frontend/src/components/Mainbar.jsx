@@ -1,4 +1,11 @@
-export default function Mainbar() {
+const FILTER_OPTIONS = ["all", "active", "inactive"];
+
+export default function Mainbar({
+  isCompleteSelected,
+  onCompleteToggle,
+  selectedFilter,
+  onFilterChange,
+}) {
   return (
     <div className="mainbar-panel">
       <h2>Career Compass</h2>
@@ -14,13 +21,26 @@ export default function Mainbar() {
 
       <h3>Status</h3>
 
-      <button>Complete</button>
+      <button
+        className={isCompleteSelected ? "btn-solid" : "btn-hollow"}
+        onClick={onCompleteToggle}
+        type="button"
+      >
+        Complete
+      </button>
 
       <h3>Filter</h3>
 
-      <button>All</button>
-      <button>Active</button>
-      <button>Inactive</button>
+      {FILTER_OPTIONS.map((option) => (
+        <button
+          key={option}
+          className={selectedFilter === option ? "btn-solid" : "btn-hollow"}
+          onClick={() => onFilterChange(option)}
+          type="button"
+        >
+          {option[0].toUpperCase() + option.slice(1)}
+        </button>
+      ))}
     </div>
   );
 }
