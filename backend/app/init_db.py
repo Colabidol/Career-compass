@@ -1,5 +1,5 @@
 from app.database import Base, engine
-from app.models import Task
+from app.models import Goal
 
 
 def init_db():

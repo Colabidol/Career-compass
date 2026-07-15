@@ -1,1 +1,1 @@
-# Backend package for the task manager application.
+# Backend package for the goal manager application.
