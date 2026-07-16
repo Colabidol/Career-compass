@@ -48,7 +48,8 @@ export default function Mainbar({
       {FILTER_OPTIONS.map((option) => (
         <button
           key={option}
-          className={selectedFilter === option ? "btn-solid" : "btn-hollow"}
+          className={!isCompleteSelected && selectedFilter === option ? "btn-solid" : "btn-hollow"}
+          disabled={isCompleteSelected}
           onClick={() => onFilterChange(option)}
           type="button"
         >

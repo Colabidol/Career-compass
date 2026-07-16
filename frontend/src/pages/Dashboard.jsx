@@ -100,6 +100,7 @@ export default function Dashboard() {
   });
 
   const handleCompleteToggle = () => {
+    setSelectedFilter("all");
     setIsCompleteSelected((prev) => !prev);
   };
 
@@ -267,6 +268,13 @@ export default function Dashboard() {
 
   const selectedGoal = goals.find((goal) => goal.id === selectedGoalId) || null;
   const editingGoal = goals.find((goal) => goal.id === editingGoalId) || null;
+  const goalsHeading = isCompleteSelected
+    ? "Completed Goals"
+    : selectedFilter === "active"
+      ? "Active Goals"
+      : selectedFilter === "inactive"
+        ? "Inactive Goals"
+        : "Goals";
 
   return (
     <div className="container">
@@ -295,7 +303,7 @@ export default function Dashboard() {
         <>
           <main className="foreground">
             <section className="task-list">
-              <h1>GOALS</h1>
+              <h1>{goalsHeading}</h1>
               {isLoadingGoals ? (
                 <div className="empty-state">
                   <h2>Loading Goals...</h2>
@@ -312,7 +320,11 @@ export default function Dashboard() {
                     goal={goal}
                     isSelected={selectedGoalId === goal.id}
                     showActivityBadge={selectedFilter === "all" && !isCompleteSelected}
-                    onSelect={() => setSelectedGoalId(goal.id)}
+                    onSelect={() =>
+                      setSelectedGoalId((currentSelectedGoalId) =>
+                        currentSelectedGoalId === goal.id ? null : goal.id
+                      )
+                    }
                   />
                 ))
               )}

@@ -10,12 +10,10 @@ export default function SidebarPanel({
   isCompletingGoal,
 }) {
   if (!selectedGoal) {
-    return (
-      <section className="details sidebar-empty">
-        <h2>Select Goals to View Task</h2>
-      </section>
-    );
+    return null;
   }
+
+  const isCompletedGoal = selectedGoal.status === "complete";
 
   return (
     <section className="details">
@@ -23,13 +21,15 @@ export default function SidebarPanel({
       <div className="top-items" >
         <h2>Task</h2>
             <div className="top-buttons" >
-                    <button
-                      disabled={isEditingGoal}
-                      onClick={onEditGoal}
-                      type="button"
-                    >
-                      {isEditingGoal ? "Editing..." : "Edit"}
-                    </button>
+                    {!isCompletedGoal ? (
+                      <button
+                        disabled={isEditingGoal}
+                        onClick={onEditGoal}
+                        type="button"
+                      >
+                        {isEditingGoal ? "Editing..." : "Edit"}
+                      </button>
+                    ) : null}
                     <button
                       className="delete"
                       disabled={isDeletingGoal}
@@ -42,6 +42,7 @@ export default function SidebarPanel({
       </div>
 
       <h3>{selectedGoal.title}</h3>
+          {isCompletedGoal ? <span className="details-completed-badge">Completed</span> : null}
 
       <label>Description</label>
 
@@ -62,33 +63,31 @@ export default function SidebarPanel({
 
       <input value={selectedGoal.dueDate} readOnly />
 
-      <button
-        className="complete activity-toggle"
-        disabled={isSavingActivity || selectedGoal.status === "complete"}
-        onClick={onToggleActivity}
-        type="button"
-      >
-        {selectedGoal.status === "complete"
-          ? "Completed Goal"
-          : isSavingActivity
+      {!isCompletedGoal ? (
+        <button
+          className="complete activity-toggle"
+          disabled={isSavingActivity}
+          onClick={onToggleActivity}
+          type="button"
+        >
+          {isSavingActivity
             ? "Saving..."
             : selectedGoal.activity === "inactive"
               ? "Mark Active"
               : "Mark Inactive"}
-      </button>
+        </button>
+      ) : null}
 
-      <button
-        className="complete complete-goal-btn"
-        disabled={isCompletingGoal || selectedGoal.status === "complete"}
-        onClick={onCompleteGoal}
-        type="button"
-      >
-        {selectedGoal.status === "complete"
-          ? "Completed"
-          : isCompletingGoal
-            ? "Completing..."
-            : "Complete Goal"}
-      </button>
+      {!isCompletedGoal ? (
+        <button
+          className="complete complete-goal-btn"
+          disabled={isCompletingGoal}
+          onClick={onCompleteGoal}
+          type="button"
+        >
+          {isCompletingGoal ? "Completing..." : "Complete Goal"}
+        </button>
+      ) : null}
     </section>
   );
 }
