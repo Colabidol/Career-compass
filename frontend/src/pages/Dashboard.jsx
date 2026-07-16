@@ -172,6 +172,14 @@ export default function Dashboard() {
       return;
     }
 
+    const shouldDeleteGoal = window.confirm(
+      `Are you sure you want to delete "${selectedGoal.title}"?`
+    );
+
+    if (!shouldDeleteGoal) {
+      return;
+    }
+
     try {
       setIsDeletingGoal(true);
       await deleteTask(selectedGoal.id);
