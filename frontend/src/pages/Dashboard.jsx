@@ -28,7 +28,28 @@ export default function Dashboard() {
       return null;
     }
 
-    return new Date(year, month - 1, day).toISOString();
+    const paddedMonth = String(month).padStart(2, "0");
+    const paddedDay = String(day).padStart(2, "0");
+
+    // Keep due dates timezone-agnostic by sending a local datetime string (no UTC conversion).
+    return `${year}-${paddedMonth}-${paddedDay}T00:00:00`;
+  };
+
+  const formatDueDateForDisplay = (dueDateValue) => {
+    if (!dueDateValue) {
+      return "No due date";
+    }
+
+    const [yearText, monthText, dayText] = String(dueDateValue).split("T")[0].split("-");
+    const yearNumber = Number(yearText);
+    const monthNumber = Number(monthText);
+    const dayNumber = Number(dayText);
+
+    if (!yearNumber || !monthNumber || !dayNumber) {
+      return "No due date";
+    }
+
+    return `${monthNumber}/${dayNumber}/${yearNumber}`;
   };
 
   const formatPriorityLabel = (priorityValue) => {
@@ -60,7 +81,7 @@ export default function Dashboard() {
           description: goal.description || "",
           category: goal.category || "Career",
           priority: formatPriorityLabel(goal.priority),
-          dueDate: goal.due_date ? new Date(goal.due_date).toLocaleDateString() : "No due date",
+          dueDate: formatDueDateForDisplay(goal.due_date),
         }));
 
         setGoals(mappedGoals);
@@ -147,9 +168,7 @@ export default function Dashboard() {
         description: savedGoal.description || "",
         category: savedGoal.category || "Career",
         priority: formatPriorityLabel(savedGoal.priority),
-        dueDate: savedGoal.due_date
-          ? new Date(savedGoal.due_date).toLocaleDateString()
-          : "No due date",
+        dueDate: formatDueDateForDisplay(savedGoal.due_date),
       };
 
       setGoals((prev) =>
@@ -221,9 +240,7 @@ export default function Dashboard() {
         description: updatedGoal.description || "",
         category: updatedGoal.category || "Career",
         priority: formatPriorityLabel(updatedGoal.priority),
-        dueDate: updatedGoal.due_date
-          ? new Date(updatedGoal.due_date).toLocaleDateString()
-          : "No due date",
+        dueDate: formatDueDateForDisplay(updatedGoal.due_date),
       };
 
       setGoals((prev) =>
@@ -258,9 +275,7 @@ export default function Dashboard() {
         description: updatedGoal.description || "",
         category: updatedGoal.category || "Career",
         priority: formatPriorityLabel(updatedGoal.priority),
-        dueDate: updatedGoal.due_date
-          ? new Date(updatedGoal.due_date).toLocaleDateString()
-          : "No due date",
+        dueDate: formatDueDateForDisplay(updatedGoal.due_date),
       };
 
       setGoals((prev) =>

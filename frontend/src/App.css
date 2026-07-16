@@ -310,6 +310,12 @@
   font-weight: 600;
 }
 
+.goalform-date-error {
+  color: #b91c1c;
+  font-size: 12px;
+  margin-top: -4px;
+}
+
 .goalform-actions {
   margin-top: auto;
   display: flex;
