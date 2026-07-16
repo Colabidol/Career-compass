@@ -11,12 +11,25 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [goals, setGoals] = useState([]);
   const [selectedGoalId, setSelectedGoalId] = useState(null);
+  const [completionCelebration, setCompletionCelebration] = useState(null);
   const [isLoadingGoals, setIsLoadingGoals] = useState(true);
   const [isGoalformOpen, setIsGoalformOpen] = useState(false);
   const [isSubmittingGoal, setIsSubmittingGoal] = useState(false);
   const [isDeletingGoal, setIsDeletingGoal] = useState(false);
   const [isCompletingGoal, setIsCompletingGoal] = useState(false);
   const [editingGoalId, setEditingGoalId] = useState(null);
+
+  useEffect(() => {
+    if (!completionCelebration) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setCompletionCelebration(null);
+    }, 2600);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [completionCelebration]);
 
   const parseDueDateToIso = (dueDateText) => {
     if (!dueDateText) {
@@ -247,6 +260,10 @@ export default function Dashboard() {
         prev.map((goal) => (goal.id === updatedGoal.id ? normalizedGoal : goal))
       );
       setSelectedGoalId(updatedGoal.id);
+      setCompletionCelebration({
+        id: updatedGoal.id,
+        title: updatedGoal.title,
+      });
     } catch (error) {
       console.error("Failed to complete goal", error);
     } finally {
@@ -301,6 +318,29 @@ export default function Dashboard() {
 
   return (
     <div className="container">
+      {completionCelebration ? (
+        <div className="goal-completion-celebration" role="status" aria-live="polite">
+          <div className="goal-completion-celebration-card">
+            <div className="goal-completion-celebration-icon" aria-hidden="true">
+              🏆
+            </div>
+            <p className="goal-completion-celebration-label">Goal completed</p>
+            <h2>{completionCelebration.title}</h2>
+            <p>Great job. That milestone is officially done.</p>
+            <div className="goal-completion-confetti" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <aside className="mainbar">
         <MainbarPanel
           isCompleteSelected={isCompleteSelected}
