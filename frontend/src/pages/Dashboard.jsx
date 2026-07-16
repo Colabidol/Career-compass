@@ -11,7 +11,7 @@ export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");
   const [goals, setGoals] = useState([]);
   const [selectedGoalId, setSelectedGoalId] = useState(null);
-  const [completionCelebration, setCompletionCelebration] = useState(null);
+  const [celebration, setCelebration] = useState(null);
   const [isLoadingGoals, setIsLoadingGoals] = useState(true);
   const [isGoalformOpen, setIsGoalformOpen] = useState(false);
   const [isSubmittingGoal, setIsSubmittingGoal] = useState(false);
@@ -20,16 +20,16 @@ export default function Dashboard() {
   const [editingGoalId, setEditingGoalId] = useState(null);
 
   useEffect(() => {
-    if (!completionCelebration) {
+    if (!celebration) {
       return undefined;
     }
 
     const timeoutId = window.setTimeout(() => {
-      setCompletionCelebration(null);
+      setCelebration(null);
     }, 2600);
 
     return () => window.clearTimeout(timeoutId);
-  }, [completionCelebration]);
+  }, [celebration]);
 
   const parseDueDateToIso = (dueDateText) => {
     if (!dueDateText) {
@@ -147,6 +147,8 @@ export default function Dashboard() {
   };
 
   const handleOpenGoalform = () => {
+    setSelectedFilter("all");
+    setIsCompleteSelected(false);
     setEditingGoalId(null);
     setIsGoalformOpen(true);
   };
@@ -192,6 +194,16 @@ export default function Dashboard() {
       setSelectedGoalId(normalizedGoal.id);
       setEditingGoalId(null);
       setIsGoalformOpen(false);
+
+      if (!editingGoalId) {
+        setCelebration({
+          kind: "create",
+          icon: "🎉",
+          label: "Goal created",
+          title: normalizedGoal.title,
+          message: "Your new goal is ready. Nice work getting it started.",
+        });
+      }
     } catch (error) {
       console.error("Failed to create goal", error);
     } finally {
@@ -260,9 +272,12 @@ export default function Dashboard() {
         prev.map((goal) => (goal.id === updatedGoal.id ? normalizedGoal : goal))
       );
       setSelectedGoalId(updatedGoal.id);
-      setCompletionCelebration({
-        id: updatedGoal.id,
+      setCelebration({
+        kind: "complete",
+        icon: "🏆",
+        label: "Goal completed",
         title: updatedGoal.title,
+        message: "Great job. That milestone is officially done.",
       });
     } catch (error) {
       console.error("Failed to complete goal", error);
@@ -318,15 +333,15 @@ export default function Dashboard() {
 
   return (
     <div className="container">
-      {completionCelebration ? (
+      {celebration ? (
         <div className="goal-completion-celebration" role="status" aria-live="polite">
           <div className="goal-completion-celebration-card">
             <div className="goal-completion-celebration-icon" aria-hidden="true">
-              🏆
+              {celebration.icon}
             </div>
-            <p className="goal-completion-celebration-label">Goal completed</p>
-            <h2>{completionCelebration.title}</h2>
-            <p>Great job. That milestone is officially done.</p>
+            <p className="goal-completion-celebration-label">{celebration.label}</p>
+            <h2>{celebration.title}</h2>
+            <p>{celebration.message}</p>
             <div className="goal-completion-confetti" aria-hidden="true">
               <span />
               <span />
@@ -344,6 +359,7 @@ export default function Dashboard() {
       <aside className="mainbar">
         <MainbarPanel
           isCompleteSelected={isCompleteSelected}
+          isGoalformOpen={isGoalformOpen}
           onCompleteToggle={handleCompleteToggle}
           selectedFilter={selectedFilter}
           onFilterChange={handleFilterChange}
