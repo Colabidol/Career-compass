@@ -18,6 +18,7 @@ export default function Dashboard() {
   const [isDeletingGoal, setIsDeletingGoal] = useState(false);
   const [isCompletingGoal, setIsCompletingGoal] = useState(false);
   const [editingGoalId, setEditingGoalId] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (!celebration) {
@@ -82,9 +83,18 @@ export default function Dashboard() {
     return normalizedFilter === "inactive" ? "inactive" : "active";
   };
 
+  const getErrorText = (error, fallbackMessage) => {
+    if (error instanceof Error && error.message) {
+      return error.message;
+    }
+
+    return fallbackMessage;
+  };
+
   useEffect(() => {
     const loadGoals = async () => {
       try {
+        setErrorMessage("");
         const data = await getGoals();
         const mappedGoals = data.map((goal) => ({
           id: goal.id,
@@ -99,7 +109,7 @@ export default function Dashboard() {
 
         setGoals(mappedGoals);
       } catch (error) {
-        console.error("Failed to fetch goals", error);
+        setErrorMessage(getErrorText(error, "Failed to load goals."));
       } finally {
         setIsLoadingGoals(false);
       }
@@ -161,6 +171,7 @@ export default function Dashboard() {
   const handleAddGoal = async (formValues) => {
     try {
       setIsSubmittingGoal(true);
+      setErrorMessage("");
       const goalPayload = {
         title: formValues.title,
         description: formValues.description,
@@ -211,7 +222,9 @@ export default function Dashboard() {
         });
       }
     } catch (error) {
-      console.error("Failed to create goal", error);
+      setErrorMessage(
+        getErrorText(error, editingGoalId ? "Failed to update goal." : "Failed to create goal.")
+      );
     } finally {
       setIsSubmittingGoal(false);
     }
@@ -232,6 +245,7 @@ export default function Dashboard() {
 
     try {
       setIsDeletingGoal(true);
+      setErrorMessage("");
       await deleteTask(selectedGoal.id);
 
       setGoals((prev) => prev.filter((goal) => goal.id !== selectedGoal.id));
@@ -243,7 +257,7 @@ export default function Dashboard() {
         message: "The goal was removed successfully.",
       });
     } catch (error) {
-      console.error("Failed to delete goal", error);
+      setErrorMessage(getErrorText(error, "Failed to delete goal."));
     } finally {
       setIsDeletingGoal(false);
     }
@@ -265,6 +279,7 @@ export default function Dashboard() {
 
     try {
       setIsCompletingGoal(true);
+      setErrorMessage("");
       const updatedGoal = await markTaskComplete(selectedGoal.id, true);
 
       const normalizedGoal = {
@@ -290,7 +305,7 @@ export default function Dashboard() {
         message: "Great job. That milestone is officially done.",
       });
     } catch (error) {
-      console.error("Failed to complete goal", error);
+      setErrorMessage(getErrorText(error, "Failed to complete goal."));
     } finally {
       setIsCompletingGoal(false);
     }
@@ -305,6 +320,7 @@ export default function Dashboard() {
 
     try {
       setIsSubmittingGoal(true);
+      setErrorMessage("");
       const updatedGoal = await updateTask(selectedGoal.id, {
         filter: nextActivity,
       });
@@ -325,7 +341,7 @@ export default function Dashboard() {
       );
       setSelectedGoalId(updatedGoal.id);
     } catch (error) {
-      console.error("Failed to update goal activity", error);
+      setErrorMessage(getErrorText(error, "Failed to update goal activity."));
     } finally {
       setIsSubmittingGoal(false);
     }
@@ -343,6 +359,19 @@ export default function Dashboard() {
 
   return (
     <div className="container">
+      {errorMessage ? (
+        <div className="error-banner" role="alert">
+          <p>{errorMessage}</p>
+          <button
+            aria-label="Dismiss error"
+            onClick={() => setErrorMessage("")}
+            type="button"
+          >
+            Dismiss
+          </button>
+        </div>
+      ) : null}
+
       {celebration ? (
         <div className="goal-completion-celebration" role="status" aria-live="polite">
           <div
