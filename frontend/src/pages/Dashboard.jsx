@@ -315,6 +315,7 @@ export default function Dashboard() {
 
       {isGoalformOpen ? (
         <Goalform
+          key={editingGoalId ?? "new-goal"}
           initialValues={editingGoal}
           isSubmitting={isSubmittingGoal}
           onCancel={handleCloseGoalform}
@@ -339,7 +340,7 @@ export default function Dashboard() {
               ) : (
                 visibleGoals.map((goal) => (
                   <TaskCard
-                    key={goal.id}
+                    key={`${goal.id}-${selectedFilter}-${isCompleteSelected}`}
                     goal={goal}
                     isSelected={selectedGoalId === goal.id}
                     showActivityBadge={selectedFilter === "all" && !isCompleteSelected}
@@ -356,6 +357,7 @@ export default function Dashboard() {
 
           <aside className="sidebar">
             <SidebarPanel
+              key={selectedGoalId ?? "empty"}
               isSavingActivity={isSubmittingGoal}
               isCompletingGoal={isCompletingGoal}
               isEditingGoal={isGoalformOpen}
