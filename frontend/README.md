@@ -1,16 +1,80 @@
-# React + Vite
+# Frontend (React + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Frontend for Career Momentum Board task management app.
 
-Currently, two official plugins are available:
+## What This Frontend Handles
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Display task list
+- Add, edit, delete tasks
+- Mark tasks complete
+- Toggle active/inactive state
+- Search by task title
+- Filter by All, Active, Inactive
+- Combine search with filters
+- Display API and validation errors in the UI
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19
+- Vite 8
+- Fetch API for backend communication
 
-## Expanding the Oxlint configuration
+## Setup
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+cd frontend
+npm install
+```
+
+## Run (Development)
+
+```bash
+npm run dev
+```
+
+Default URL: `http://localhost:5173`
+
+## Build
+
+```bash
+npm run build
+```
+
+## API Integration
+
+Frontend service layer is in `src/services/api.jsx`.
+
+Expected backend base URL:
+
+`http://127.0.0.1:8000`
+
+Used endpoints:
+
+- `GET /goals`
+- `POST /goals`
+- `PATCH /goals/{goal_id}`
+- `PATCH /goals/{goal_id}/complete`
+- `DELETE /goals/{goal_id}`
+
+## Error Handling
+
+- Every request checks HTTP status before returning data
+- Backend validation messages are extracted and shown to users
+- Connection failures show a friendly message
+- Empty 204 responses (delete) are handled without JSON parsing errors
+
+## Key Folder Structure
+
+```text
+frontend/
+	src/
+		components/
+			Card.jsx
+			Goalform.jsx
+			Mainbar.jsx
+			Sidebar.jsx
+		pages/
+			Dashboard.jsx
+		services/
+			api.jsx
+```
