@@ -4,6 +4,7 @@ const FILTER_OPTIONS = ["all", "active", "inactive"];
 
 export default function Mainbar({
   isCompleteSelected,
+  isGoalformOpen,
   onCompleteToggle,
   selectedFilter,
   onFilterChange,
@@ -36,7 +37,8 @@ export default function Mainbar({
       <h3>Status</h3>
 
       <button
-        className={isCompleteSelected ? "btn-solid" : "btn-hollow"}
+        className={!isGoalformOpen && isCompleteSelected ? "btn-solid" : "btn-hollow"}
+        disabled={isGoalformOpen}
         onClick={onCompleteToggle}
         type="button"
       >
@@ -48,8 +50,8 @@ export default function Mainbar({
       {FILTER_OPTIONS.map((option) => (
         <button
           key={option}
-          className={!isCompleteSelected && selectedFilter === option ? "btn-solid" : "btn-hollow"}
-          disabled={isCompleteSelected}
+          className={!isGoalformOpen && !isCompleteSelected && selectedFilter === option ? "btn-solid" : "btn-hollow"}
+          disabled={isGoalformOpen || isCompleteSelected}
           onClick={() => onFilterChange(option)}
           type="button"
         >
