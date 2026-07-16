@@ -23,6 +23,10 @@ class GoalUpdate(BaseModel):
     due_date: Optional[datetime] = None
 
 
+class GoalCompletionUpdate(BaseModel):
+    completed: bool = True
+
+
 class GoalRead(GoalCreate):
     id: int
     model_config = ConfigDict(from_attributes=True)

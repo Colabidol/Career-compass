@@ -3,7 +3,7 @@ import MainbarPanel from "../components/Mainbar";
 import TaskCard from "../components/Card";
 import SidebarPanel from "../components/Sidebar";
 import Goalform from "../components/Goalform";
-import { createTask, deleteTask, getGoals, updateTask } from "../services/api";
+import { createTask, deleteTask, getGoals, markTaskComplete, updateTask } from "../services/api";
 
 export default function Dashboard() {
   const [isCompleteSelected, setIsCompleteSelected] = useState(false);
@@ -265,9 +265,7 @@ export default function Dashboard() {
 
     try {
       setIsCompletingGoal(true);
-      const updatedGoal = await updateTask(selectedGoal.id, {
-        completed: true,
-      });
+      const updatedGoal = await markTaskComplete(selectedGoal.id, true);
 
       const normalizedGoal = {
         id: updatedGoal.id,

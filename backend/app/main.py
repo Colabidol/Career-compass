@@ -60,6 +60,22 @@ def update_goal(goal_id: int, goal_data: schemas.GoalUpdate, db: Session = Depen
     return goal
 
 
+@app.patch("/goals/{goal_id}/complete", response_model=schemas.GoalRead)
+def mark_goal_complete(
+        goal_id: int,
+        completion_data: schemas.GoalCompletionUpdate,
+        db: Session = Depends(get_db),
+):
+        goal = db.query(models.Goal).filter(models.Goal.id == goal_id).first()
+        if goal is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Goal not found")
+
+        goal.completed = completion_data.completed
+        db.commit()
+        db.refresh(goal)
+        return goal
+
+
 @app.delete("/goals/{goal_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_goal(goal_id: int, db: Session = Depends(get_db)):
     goal = db.query(models.Goal).filter(models.Goal.id == goal_id).first()
