@@ -63,7 +63,7 @@ export default function SidebarPanel({
       <input value={selectedGoal.dueDate} readOnly />
 
       <button
-        className="complete"
+        className="complete activity-toggle"
         disabled={isSavingActivity || selectedGoal.status === "complete"}
         onClick={onToggleActivity}
         type="button"
@@ -78,7 +78,7 @@ export default function SidebarPanel({
       </button>
 
       <button
-        className="complete"
+        className="complete complete-goal-btn"
         disabled={isCompletingGoal || selectedGoal.status === "complete"}
         onClick={onCompleteGoal}
         type="button"

@@ -109,6 +109,37 @@
   margin-bottom: 4px;
 }
 
+.card-content {
+  width: 100%;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.activity-badge {
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+}
+
+.activity-badge.active {
+  background: rgba(34, 197, 94, 0.14);
+  border-color: rgba(34, 197, 94, 0.35);
+  color: #166534;
+}
+
+.activity-badge.inactive {
+  background: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #92400e;
+}
+
 .card p {
   font-size: 13px;
   color: #6b7280;
@@ -186,6 +217,16 @@
 .complete {
   min-height: 60px;
   background: #6c63ff;
+}
+
+.details .activity-toggle {
+  min-height: 40px;
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.details .complete-goal-btn {
+  margin-top: auto;
 }
 
 .mainbar-panel input,

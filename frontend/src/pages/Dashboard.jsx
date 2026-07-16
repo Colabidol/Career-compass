@@ -295,6 +295,7 @@ export default function Dashboard() {
                     key={goal.id}
                     goal={goal}
                     isSelected={selectedGoalId === goal.id}
+                    showActivityBadge={selectedFilter === "all" && !isCompleteSelected}
                     onSelect={() => setSelectedGoalId(goal.id)}
                   />
                 ))
