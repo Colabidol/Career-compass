@@ -8,6 +8,8 @@ export default function Mainbar({
   selectedFilter,
   onFilterChange,
   onAddGoal,
+  searchTerm,
+  onSearchChange,
 }) {
   return (
     <div className="mainbar-panel">
@@ -19,6 +21,8 @@ export default function Mainbar({
       <input
         type="text"
         placeholder="Search..."
+        value={searchTerm}
+        onChange={(event) => onSearchChange(event.target.value)}
       />
 
       <button

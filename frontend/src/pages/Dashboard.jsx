@@ -8,6 +8,7 @@ import { createTask, deleteTask, getGoals, updateTask } from "../services/api";
 export default function Dashboard() {
   const [isCompleteSelected, setIsCompleteSelected] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const [goals, setGoals] = useState([]);
   const [selectedGoalId, setSelectedGoalId] = useState(null);
   const [isLoadingGoals, setIsLoadingGoals] = useState(true);
@@ -74,6 +75,15 @@ export default function Dashboard() {
   }, []);
 
   const visibleGoals = goals.filter((goal) => {
+    const normalizedSearchTerm = searchTerm.trim().toLowerCase();
+    const matchesSearch = normalizedSearchTerm
+      ? goal.title.toLowerCase().includes(normalizedSearchTerm)
+      : true;
+
+    if (!matchesSearch) {
+      return false;
+    }
+
     if (isCompleteSelected) {
       return goal.status === "complete";
     }
@@ -95,6 +105,10 @@ export default function Dashboard() {
 
   const handleFilterChange = (filterKey) => {
     setSelectedFilter(filterKey);
+  };
+
+  const handleSearchChange = (value) => {
+    setSearchTerm(value);
   };
 
   const handleOpenGoalform = () => {
@@ -263,6 +277,8 @@ export default function Dashboard() {
           selectedFilter={selectedFilter}
           onFilterChange={handleFilterChange}
           onAddGoal={handleOpenGoalform}
+          searchTerm={searchTerm}
+          onSearchChange={handleSearchChange}
         />
       </aside>
 
