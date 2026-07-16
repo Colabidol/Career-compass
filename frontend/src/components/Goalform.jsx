@@ -8,8 +8,11 @@ export default function Goalform({
   submitLabel = "Save Goal",
   title = "Create Goal",
 }) {
+  const initialDueDateText = initialValues?.dueDate || "";
+  const normalizedInitialDueDate =
+    initialDueDateText.toLowerCase() === "no due date" ? "" : initialDueDateText;
   const [initialMonth = "", initialDay = "", initialYear = ""] =
-    initialValues?.dueDate?.split("/") || [];
+    normalizedInitialDueDate.split("/") || [];
 
   const [formValues, setFormValues] = useState({
     title: initialValues?.title || "",

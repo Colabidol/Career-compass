@@ -6,6 +6,7 @@
   margin: 24px auto;
   min-height: calc(100vh - 48px);
   position: relative;
+  overflow: hidden;
 }
 
 .goal-completion-celebration {
@@ -229,7 +230,7 @@
 }
 
 .mainbar {
-  flex: 0 0 280px;
+  flex: 0 0 clamp(230px, 22vw, 280px);
   background: #f4f6ff;
   border-radius: 24px;
   padding: 24px;
@@ -237,7 +238,9 @@
 }
 
 .sidebar {
-  flex: 0 0 500px;
+  flex: 0 1 clamp(280px, 32vw, 420px);
+  min-width: 280px;
+  max-width: 420px;
   background: #f4f6ff;
   border-radius: 24px;
   padding: 24px;
@@ -245,7 +248,7 @@
 }
 
 .foreground {
-  flex: 1;
+  flex: 1 1 0;
   min-width: 0;
   display: flex;
 }
@@ -540,9 +543,49 @@
 }
 
 .goalform-layout .sidebar {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
   background: transparent;
   box-shadow: none;
   padding: 0;
+}
+
+@media (max-width: 1220px) {
+  .container {
+    flex-wrap: wrap;
+  }
+
+  .mainbar {
+    flex: 1 1 100%;
+  }
+
+  .foreground,
+  .sidebar {
+    flex: 1 1 calc(50% - 12px);
+    max-width: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .container {
+    width: calc(100% - 24px);
+    margin: 12px auto;
+    gap: 12px;
+  }
+
+  .mainbar,
+  .foreground,
+  .sidebar {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .mainbar,
+  .task-list,
+  .sidebar {
+    padding: 18px;
+  }
 }
 
 .goalform-panel {
