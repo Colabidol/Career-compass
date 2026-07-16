@@ -195,7 +195,13 @@ export default function Dashboard() {
       setEditingGoalId(null);
       setIsGoalformOpen(false);
 
-      if (!editingGoalId) {
+      if (editingGoalId) {
+        setCelebration({
+          kind: "edit",
+          icon: "✨",
+          title: "Changes Saved",
+        });
+      } else {
         setCelebration({
           kind: "create",
           icon: "🎉",
@@ -230,6 +236,12 @@ export default function Dashboard() {
 
       setGoals((prev) => prev.filter((goal) => goal.id !== selectedGoal.id));
       setSelectedGoalId(null);
+      setCelebration({
+        kind: "delete",
+        icon: "🗑️",
+        title: "Goal Deleted",
+        message: "The goal was removed successfully.",
+      });
     } catch (error) {
       console.error("Failed to delete goal", error);
     } finally {
@@ -335,13 +347,17 @@ export default function Dashboard() {
     <div className="container">
       {celebration ? (
         <div className="goal-completion-celebration" role="status" aria-live="polite">
-          <div className="goal-completion-celebration-card">
+          <div
+            className={`goal-completion-celebration-card ${celebration.kind === "edit" ? "goal-completion-celebration-card-minimal" : ""} ${celebration.kind === "delete" ? "goal-completion-celebration-card-delete" : ""}`.trim()}
+          >
             <div className="goal-completion-celebration-icon" aria-hidden="true">
               {celebration.icon}
             </div>
-            <p className="goal-completion-celebration-label">{celebration.label}</p>
+            {celebration.label ? (
+              <p className="goal-completion-celebration-label">{celebration.label}</p>
+            ) : null}
             <h2>{celebration.title}</h2>
-            <p>{celebration.message}</p>
+            {celebration.message ? <p>{celebration.message}</p> : null}
             <div className="goal-completion-confetti" aria-hidden="true">
               <span />
               <span />

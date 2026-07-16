@@ -33,6 +33,33 @@
   animation: celebration-card-bounce 520ms cubic-bezier(0.2, 1.2, 0.3, 1) both;
 }
 
+.goal-completion-celebration-card-minimal {
+  width: min(380px, calc(100vw - 40px));
+  padding: 28px 24px 26px;
+}
+
+.goal-completion-celebration-card-minimal h2 {
+  margin-bottom: 0;
+  font-size: 30px;
+}
+
+.goal-completion-celebration-card-minimal .goal-completion-celebration-icon {
+  margin-bottom: 12px;
+}
+
+.goal-completion-celebration-card-delete {
+  border-color: rgba(239, 68, 68, 0.18);
+}
+
+.goal-completion-celebration-card-delete .goal-completion-celebration-icon {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(255, 255, 255, 0.95));
+  box-shadow: 0 12px 30px rgba(239, 68, 68, 0.2);
+}
+
+.goal-completion-celebration-card-delete .goal-completion-celebration-label {
+  color: #dc2626;
+}
+
 .goal-completion-celebration-icon {
   width: 84px;
   height: 84px;
