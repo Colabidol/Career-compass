@@ -10,7 +10,11 @@ export default function SidebarPanel({
   isCompletingGoal,
 }) {
   if (!selectedGoal) {
-    return null;
+    return (
+      <section className="details sidebar-empty">
+        <h2>Select Goals to View Task</h2>
+      </section>
+    );
   }
 
   const isCompletedGoal = selectedGoal.status === "complete";
