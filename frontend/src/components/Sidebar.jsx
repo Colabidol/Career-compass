@@ -4,6 +4,8 @@ export default function SidebarPanel({
   isDeletingGoal,
   onEditGoal,
   isEditingGoal,
+  onToggleActivity,
+  isSavingActivity,
   onCompleteGoal,
   isCompletingGoal,
 }) {
@@ -59,6 +61,21 @@ export default function SidebarPanel({
       <label>Due Date</label>
 
       <input value={selectedGoal.dueDate} readOnly />
+
+      <button
+        className="complete"
+        disabled={isSavingActivity || selectedGoal.status === "complete"}
+        onClick={onToggleActivity}
+        type="button"
+      >
+        {selectedGoal.status === "complete"
+          ? "Completed Goal"
+          : isSavingActivity
+            ? "Saving..."
+            : selectedGoal.activity === "inactive"
+              ? "Mark Active"
+              : "Mark Inactive"}
+      </button>
 
       <button
         className="complete"

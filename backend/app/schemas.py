@@ -7,6 +7,7 @@ class GoalCreate(BaseModel):
     title: str = Field(min_length=1, max_length=120)
     description: Optional[str] = None
     completed: bool = False
+    filter: str = "active"
     category: str = "Career"
     priority: str = "Medium"
     due_date: Optional[datetime] = None
@@ -16,6 +17,7 @@ class GoalUpdate(BaseModel):
     title: Optional[str] = Field(default=None, min_length=1, max_length=120)
     description: Optional[str] = None
     completed: Optional[bool] = None
+    filter: Optional[str] = None
     category: Optional[str] = None
     priority: Optional[str] = None
     due_date: Optional[datetime] = None

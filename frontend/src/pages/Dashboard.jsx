@@ -38,6 +38,15 @@ export default function Dashboard() {
     return priorityValue.charAt(0).toUpperCase() + priorityValue.slice(1).toLowerCase();
   };
 
+  const normalizeActivity = (filterValue) => {
+    if (!filterValue) {
+      return "active";
+    }
+
+    const normalizedFilter = filterValue.toLowerCase();
+    return normalizedFilter === "inactive" ? "inactive" : "active";
+  };
+
   useEffect(() => {
     const loadGoals = async () => {
       try {
@@ -46,6 +55,7 @@ export default function Dashboard() {
           id: goal.id,
           title: goal.title,
           status: goal.completed ? "complete" : "active",
+          activity: normalizeActivity(goal.filter),
           description: goal.description || "",
           category: goal.category || "Career",
           priority: formatPriorityLabel(goal.priority),
@@ -76,7 +86,7 @@ export default function Dashboard() {
       return true;
     }
 
-    return goal.status === selectedFilter;
+    return goal.activity === selectedFilter;
   });
 
   const handleCompleteToggle = () => {
@@ -104,6 +114,7 @@ export default function Dashboard() {
         title: formValues.title,
         description: formValues.description,
         completed: editingGoalId ? selectedGoal?.status === "complete" : false,
+        filter: editingGoalId ? selectedGoal?.activity || "active" : "active",
         category: formValues.category,
         priority: formValues.priority,
         due_date: parseDueDateToIso(formValues.dueDate),
@@ -117,6 +128,7 @@ export default function Dashboard() {
         id: savedGoal.id,
         title: savedGoal.title,
         status: savedGoal.completed ? "complete" : "active",
+        activity: normalizeActivity(savedGoal.filter),
         description: savedGoal.description || "",
         category: savedGoal.category || "Career",
         priority: formatPriorityLabel(savedGoal.priority),
@@ -182,6 +194,7 @@ export default function Dashboard() {
         id: updatedGoal.id,
         title: updatedGoal.title,
         status: updatedGoal.completed ? "complete" : "active",
+        activity: normalizeActivity(updatedGoal.filter),
         description: updatedGoal.description || "",
         category: updatedGoal.category || "Career",
         priority: formatPriorityLabel(updatedGoal.priority),
@@ -198,6 +211,43 @@ export default function Dashboard() {
       console.error("Failed to complete goal", error);
     } finally {
       setIsCompletingGoal(false);
+    }
+  };
+
+  const handleToggleActivity = async () => {
+    if (!selectedGoal || selectedGoal.status === "complete") {
+      return;
+    }
+
+    const nextActivity = selectedGoal.activity === "inactive" ? "active" : "inactive";
+
+    try {
+      setIsSubmittingGoal(true);
+      const updatedGoal = await updateTask(selectedGoal.id, {
+        filter: nextActivity,
+      });
+
+      const normalizedGoal = {
+        id: updatedGoal.id,
+        title: updatedGoal.title,
+        status: updatedGoal.completed ? "complete" : "active",
+        activity: normalizeActivity(updatedGoal.filter),
+        description: updatedGoal.description || "",
+        category: updatedGoal.category || "Career",
+        priority: formatPriorityLabel(updatedGoal.priority),
+        dueDate: updatedGoal.due_date
+          ? new Date(updatedGoal.due_date).toLocaleDateString()
+          : "No due date",
+      };
+
+      setGoals((prev) =>
+        prev.map((goal) => (goal.id === updatedGoal.id ? normalizedGoal : goal))
+      );
+      setSelectedGoalId(updatedGoal.id);
+    } catch (error) {
+      console.error("Failed to update goal activity", error);
+    } finally {
+      setIsSubmittingGoal(false);
     }
   };
 
@@ -254,9 +304,11 @@ export default function Dashboard() {
 
           <aside className="sidebar">
             <SidebarPanel
+              isSavingActivity={isSubmittingGoal}
               isCompletingGoal={isCompletingGoal}
               isEditingGoal={isGoalformOpen}
               isDeletingGoal={isDeletingGoal}
+              onToggleActivity={handleToggleActivity}
               onCompleteGoal={handleCompleteGoal}
               onEditGoal={handleEditGoal}
               onDeleteGoal={handleDeleteGoal}
