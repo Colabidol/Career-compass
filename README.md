@@ -1,4 +1,4 @@
-# Career Momentum Board
+# Career Compass
 
 Fullstack Task Management Application built for the practical exam requirements.
 
