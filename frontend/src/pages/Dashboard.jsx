@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [isCompletingGoal, setIsCompletingGoal] = useState(false);
   const [editingGoalId, setEditingGoalId] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [deleteCandidate, setDeleteCandidate] = useState(null);
 
   useEffect(() => {
     if (!celebration) {
@@ -163,6 +164,7 @@ export default function Dashboard() {
     setSelectedFilter("all");
     setIsCompleteSelected(false);
     setEditingGoalId(null);
+    setDeleteCandidate(null);
     setIsGoalformOpen(true);
   };
 
@@ -239,21 +241,39 @@ export default function Dashboard() {
       return;
     }
 
-    const shouldDeleteGoal = window.confirm(
-      `Are you sure you want to delete "${selectedGoal.title}"?`
-    );
+    if (isDeletingGoal) {
+      return;
+    }
 
-    if (!shouldDeleteGoal) {
+    setDeleteCandidate({
+      id: selectedGoal.id,
+      title: selectedGoal.title,
+    });
+  };
+
+  const handleCancelDelete = () => {
+    if (isDeletingGoal) {
+      return;
+    }
+
+    setDeleteCandidate(null);
+  };
+
+  const handleConfirmDeleteGoal = async () => {
+    if (!deleteCandidate) {
       return;
     }
 
     try {
       setIsDeletingGoal(true);
       setErrorMessage("");
-      await deleteTask(selectedGoal.id);
+      await deleteTask(deleteCandidate.id);
 
-      setGoals((prev) => prev.filter((goal) => goal.id !== selectedGoal.id));
-      setSelectedGoalId(null);
+      setGoals((prev) => prev.filter((goal) => goal.id !== deleteCandidate.id));
+      setSelectedGoalId((currentSelectedGoalId) =>
+        currentSelectedGoalId === deleteCandidate.id ? null : currentSelectedGoalId
+      );
+      setDeleteCandidate(null);
       setCelebration({
         kind: "delete",
         icon: "🗑️",
@@ -363,6 +383,37 @@ export default function Dashboard() {
 
   return (
     <div className="container">
+      {deleteCandidate ? (
+        <div className="delete-confirmation-overlay" role="dialog" aria-modal="true">
+          <section className="delete-confirmation-card" aria-labelledby="delete-goal-title">
+            <p className="delete-confirmation-label">Delete Confirmation</p>
+            <h2 id="delete-goal-title">Delete this goal?</h2>
+            <p className="delete-confirmation-message">
+              Are you sure you want to delete "{deleteCandidate.title}"? This action cannot be
+              undone.
+            </p>
+            <div className="delete-confirmation-actions">
+              <button
+                className="delete-confirmation-cancel"
+                disabled={isDeletingGoal}
+                onClick={handleCancelDelete}
+                type="button"
+              >
+                Cancel
+              </button>
+              <button
+                className="delete-confirmation-delete"
+                disabled={isDeletingGoal}
+                onClick={handleConfirmDeleteGoal}
+                type="button"
+              >
+                {isDeletingGoal ? "Deleting..." : "Delete Goal"}
+              </button>
+            </div>
+          </section>
+        </div>
+      ) : null}
+
       {errorMessage ? (
         <div className="error-banner" role="alert">
           <p>{errorMessage}</p>
