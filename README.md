@@ -112,6 +112,12 @@ Database file: `backend/goals.db`
 - Frontend displays user-facing error messages for API/validation failures
 - Frontend safely handles empty 204 delete responses
 
+## UI Design
+
+This project UI was designed in Figma:
+
+- [Career Compass Figma Design](https://www.figma.com/design/wO0C05E5OrLvREWT7KbTpQ/Career-Compass?node-id=0-1&t=gb4OvzVb6eHYzdxo-1)
+
 ## Scripts
 
 Frontend (`frontend/package.json`):
