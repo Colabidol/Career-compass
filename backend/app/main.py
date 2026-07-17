@@ -7,8 +7,9 @@ from sqlalchemy.orm import Session
 from app import models, schemas
 from app.database import SessionLocal, engine
 
-app = FastAPI(title="Career Momentum Board API")
+app = FastAPI(title="Career Compass API")
 
+# Create the SQLite schema on startup for the exam demo environment.
 models.Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
@@ -21,6 +22,7 @@ app.add_middleware(
 
 
 def get_db() -> Generator[Session, None, None]:
+    # Provide a per-request database session and close it reliably afterward.
     db = SessionLocal()
     try:
         yield db
@@ -34,11 +36,13 @@ def health_check():
 
 @app.get("/goals", response_model=list[schemas.GoalRead])
 def list_goals(db: Session = Depends(get_db)):
+    # Return newest goals first so freshly created or updated tasks are easy to spot.
     return db.query(models.Goal).order_by(models.Goal.created_at.desc()).all()
 
 
 @app.post("/goals", response_model=schemas.GoalRead, status_code=status.HTTP_201_CREATED)
 def create_goal(goal_data: schemas.GoalCreate, db: Session = Depends(get_db)):
+    # Persist a new goal from the validated request body.
     db_goal = models.Goal(**goal_data.model_dump())
     db.add(db_goal)
     db.commit()
@@ -52,6 +56,7 @@ def update_goal(goal_id: int, goal_data: schemas.GoalUpdate, db: Session = Depen
     if goal is None:
       raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Goal not found")
 
+        # Apply only the fields the client actually sent.
     for field, value in goal_data.model_dump(exclude_unset=True).items():
         setattr(goal, field, value)
 
@@ -66,6 +71,7 @@ def mark_goal_complete(
         completion_data: schemas.GoalCompletionUpdate,
         db: Session = Depends(get_db),
 ):
+    # Allow the client to toggle completion state on an existing goal.
         goal = db.query(models.Goal).filter(models.Goal.id == goal_id).first()
         if goal is None:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Goal not found")

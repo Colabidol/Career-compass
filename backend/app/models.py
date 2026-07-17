@@ -4,6 +4,7 @@ from sqlalchemy.sql import func
 from app.database import Base
 
 
+# Database model used by the FastAPI CRUD endpoints.
 class Goal(Base):
     __tablename__ = "goals"
 

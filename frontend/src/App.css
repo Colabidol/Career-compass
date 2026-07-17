@@ -1,4 +1,5 @@
 .container {
+  /* Main three-column board layout for the dashboard and edit form. */
   display: flex;
   align-items: stretch;
   gap: 24px;
@@ -268,6 +269,7 @@
 }
 
 .mainbar {
+  /* Left control panel with search, filters, and create actions. */
   flex: 0 0 clamp(230px, 22vw, 280px);
   background: #f4f6ff;
   border-radius: 24px;
@@ -276,6 +278,7 @@
 }
 
 .sidebar {
+  /* Right-side details pane for the currently selected goal. */
   flex: 0 1 clamp(280px, 32vw, 420px);
   min-width: 280px;
   max-width: 420px;
@@ -286,12 +289,14 @@
 }
 
 .foreground {
+  /* Center column that holds the goal list or the form main section. */
   flex: 1 1 0;
   min-width: 0;
   display: flex;
 }
 
 .task-list {
+  /* Card list container for the visible goals. */
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -324,6 +329,7 @@
 
 .mainbar-panel,
 .details {
+  /* Keep stacked panel content evenly spaced and full height. */
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -366,6 +372,7 @@
 }
 
 .card {
+  /* Individual task summary card in the goal list. */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -555,6 +562,7 @@
 }
 
 .goalform-layout {
+  /* Two-panel create/edit form layout mirroring the dashboard structure. */
   flex: 1;
   min-width: 0;
   display: flex;

@@ -6,6 +6,7 @@ import Goalform from "../components/Goalform";
 import { createTask, deleteTask, getGoals, markTaskComplete, updateTask } from "../services/api";
 
 export default function Dashboard() {
+  // Dashboard owns the task board state: loading, filters, selection, edits, and API mutations.
   const [isCompleteSelected, setIsCompleteSelected] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -92,6 +93,7 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
+    // Fetch and normalize goals once on mount so the UI works with a stable view model.
     const loadGoals = async () => {
       try {
         setErrorMessage("");
@@ -119,6 +121,7 @@ export default function Dashboard() {
   }, []);
 
   const visibleGoals = goals.filter((goal) => {
+    // Search and filter combine here before the cards are rendered.
     const normalizedSearchTerm = searchTerm.trim().toLowerCase();
     const matchesSearch = normalizedSearchTerm
       ? goal.title.toLowerCase().includes(normalizedSearchTerm)
@@ -169,6 +172,7 @@ export default function Dashboard() {
   };
 
   const handleAddGoal = async (formValues) => {
+    // Submit both create and edit flows through the same payload builder.
     try {
       setIsSubmittingGoal(true);
       setErrorMessage("");

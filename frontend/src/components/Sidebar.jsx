@@ -10,6 +10,7 @@ export default function SidebarPanel({
   isCompletingGoal,
 }) {
   if (!selectedGoal) {
+    // Empty state shown when no card is selected in the board.
     return (
       <section className="details sidebar-empty">
         <h2>Select Goals to View Task</h2>
@@ -20,6 +21,7 @@ export default function SidebarPanel({
   const isCompletedGoal = selectedGoal.status === "complete";
 
   return (
+    // Sidebar shows the selected goal details and the task actions.
     <section className="details">
 
       <div className="top-items" >

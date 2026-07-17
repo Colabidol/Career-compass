@@ -13,6 +13,7 @@ export default function Mainbar({
   onSearchChange,
 }) {
   return (
+    // Mainbar provides the primary task controls: search, create, status, and filters.
     <div className="mainbar-panel">
       <div className="mainbar-brand">
         <img alt="Career Compass logo" className="mainbar-logo" src={compassLogo} />

@@ -8,6 +8,7 @@ export default function Goalform({
   submitLabel = "Save Goal",
   title = "Create Goal",
 }) {
+  // Preserve empty date fields in edit mode so placeholders show instead of a label.
   const initialDueDateText = initialValues?.dueDate || "";
   const normalizedInitialDueDate =
     initialDueDateText.toLowerCase() === "no due date" ? "" : initialDueDateText;
@@ -34,6 +35,7 @@ export default function Goalform({
   };
 
   const handleDatePartChange = (event) => {
+    // Keep date fragments numeric and clamp them to valid calendar ranges.
     const { name, value } = event.target;
     const digitsOnly = value.replace(/\D/g, "");
     const maxLength = name === "dueYear" ? 4 : 2;
@@ -85,6 +87,7 @@ export default function Goalform({
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    // Only build an ISO-style due date when all three parts are present.
     if (formValues.dueMonth && formValues.dueDay && formValues.dueYear) {
       const monthNumber = Number.parseInt(formValues.dueMonth, 10);
       const dayNumber = Number.parseInt(formValues.dueDay, 10);

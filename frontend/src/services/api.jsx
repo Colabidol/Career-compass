@@ -1,11 +1,11 @@
 const API = "http://127.0.0.1:8000";
 
+// Shared fetch wrapper that normalizes success, JSON errors, and empty responses.
 async function parseResponse(response) {
     const contentType = response.headers.get("content-type") || "";
     const contentLength = response.headers.get("content-length");
     let payload = null;
 
-    // 204/205 responses and zero-length bodies should not be parsed as JSON.
     if (response.status === 204 || response.status === 205 || contentLength === "0") {
         payload = null;
     } else if (contentType.includes("application/json")) {
@@ -52,6 +52,7 @@ async function request(path, options = {}) {
     return parseResponse(response);
 }
 
+// Backend goal endpoints used by the dashboard.
 export async function getGoals() {
     return request("/goals");
 }
